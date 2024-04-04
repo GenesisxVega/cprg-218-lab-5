@@ -5,7 +5,7 @@ function createCardElement(berry) {
   return `
     <li class="card">
       <div class="card-content">
-        <img src="http://localhost:8000/sprites/sprites/items/berries/${berry.name}-berry.png" alt="${berry.name}" class="berry-image">
+        <img src="${berry.sprite}" alt="${berry.name}" class="berry-image">
         <h3 class="header">
           ${berry.name}
         </h3>
@@ -24,6 +24,32 @@ function createCardElement(berry) {
 function createCardElements(data) {
   return data.map(createCardElement).join("");
 }
+
+/**
+ * Berry flavors data.
+ */
+const berryFlavors = {
+  "cheri": ["spicy"],
+  "chesto": ["dry"],
+  "pecha": ["sweet"],
+  "rawst": ["bitter"],
+  "aspear": ["sour"],
+  "leppa": ["spicy", "sweet", "bitter", "sour"],
+  "oran": ["spicy", "dry", "sweet", "bitter", "sour"],
+  "persim": ["spicy", "dry", "sweet", "bitter", "sour"],
+  "lum": ["spicy", "dry", "sweet", "bitter", "sour"],
+  "sitrus": ["spicy", "dry", "sweet", "bitter", "sour"],
+  "figy": ["spicy"],
+  "wiki": ["dry"],
+  "mago": ["sweet"],
+  "aguav": ["bitter"],
+  "iapapa": ["sour"],
+  "razz": ["spicy", "dry"],
+  "bluk": ["dry", "sweet"],
+  "nanab": ["sweet", "bitter"],
+  "wepear": ["bitter", "sour"],
+  "pinap": ["spicy", "sour"]
+};
 
 /**
 * Fetch list of berries.
@@ -61,18 +87,20 @@ async function fetchAllBerryDetails() {
   const berries = await fetchBerriesList();
 
   for (const berry of berries) {
-      const data = await fetchBerryDetails(berry.url);
-      if (data) {
-          // Fetch sprite image for the berry
-          const spriteUrl = `http://localhost:8000/sprites/sprites/items/berries/${berry.name}-berry.png`;
-          // Push berry details with sprite URL to the details list
-          detailsList.push({
-              name: data.name,
-              flavor: data.flavors[0].flavor.name, // Assuming each berry has at least one flavor
-              firmness: data.firmness.name, // Assuming each berry has a firmness property
-              sprite: spriteUrl
-          });
-      }
+    const berryData = await fetchBerryDetails(berry.url);
+    if (berryData) {
+      const flavors = berryFlavors[berry.name] || ["Unknown"];
+
+      // Fetch sprite image for the berry
+      const spriteUrl = `http://localhost:8000/sprites/sprites/items/berries/${berry.name}-berry.png`;
+
+      detailsList.push({
+        name: berryData.name,
+        flavor: flavors.join(", "),
+        firmness: berryData.firmness.name,
+        sprite: spriteUrl
+      });
+    }
   }
 
   return detailsList;
@@ -100,14 +128,14 @@ function searchbarEventHandler() {
   const cards = enhancedResults.getElementsByClassName("card");
 
   for (let i = 0; i < cards.length; i++) {
-      // If the value of the input field is not equal to the name, flavor, or firmness of the berry, hide the card
-      const cardName = cards[i].querySelector(".header").textContent.toLowerCase();
-      const cardFlavorFirmness = cards[i].querySelector(".subheader").textContent.toLowerCase();
-      if (!cardName.includes(input) && !cardFlavorFirmness.includes(input)) {
-          cards[i].style.display = "none";
-      } else {
-          cards[i].style.display = "block";
-      }
+    // If the value of the input field is not equal to the name, flavor, or firmness of the berry, hide the card
+    const cardName = cards[i].querySelector(".header").textContent.toLowerCase();
+    const cardFlavor = cards[i].querySelector(".subheader").textContent.toLowerCase();
+    if (!cardName.includes(input) && !cardFlavor.includes(input)) {
+      cards[i].style.display = "none";
+    } else {
+      cards[i].style.display = "block";
+    }
   }
 }
 
