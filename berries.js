@@ -1,6 +1,3 @@
-/**
- * Create one card from berry data.
- */
 function createCardElement(berry) {
   return `
     <li class="card">
@@ -18,9 +15,6 @@ function createCardElement(berry) {
   `;
 }
 
-/**
-* Create multiple cards from array of berry data.
-*/
 function createCardElements(data) {
   return data.map(createCardElement).join("");
 }
@@ -64,7 +58,7 @@ async function fetchAllBerryDetails() {
       const data = await fetchBerryDetails(berry.url);
       if (data) {
           // Fetch sprite image for the berry
-          const spriteUrl = `http://localhost:8000/sprites/sprites/items/berries/${berry.name}-berry.png`;
+          const spriteUrl = `https://localhost:8000/sprites/sprites/items/berries/${berry.name}-berry.png`;
           // Push berry details with sprite URL to the details list
           detailsList.push({
               name: data.name,
@@ -93,14 +87,11 @@ renderOption2Enhanced();
 * Option 2 Enhanced: Search bar function.
 */
 function searchbarEventHandler() {
-  // Get the value of the input field with id="searchbar"
   let input = document.getElementById("searchbar").value.toLowerCase().trim();
-  // Get all the cards
   const enhancedResults = document.getElementById("option-2-enhanced-results");
   const cards = enhancedResults.getElementsByClassName("card");
 
   for (let i = 0; i < cards.length; i++) {
-      // If the value of the input field is not equal to the name, flavor, or firmness of the berry, hide the card
       const cardName = cards[i].querySelector(".header").textContent.toLowerCase();
       const cardFlavorFirmness = cards[i].querySelector(".subheader").textContent.toLowerCase();
       if (!cardName.includes(input) && !cardFlavorFirmness.includes(input)) {
