@@ -5,7 +5,7 @@ function createCardElement(berry) {
   return `
     <li class="card">
       <div class="card-content">
-        <img src="${berry.sprite}" alt="${berry.name}" class="berry-image">
+        <img src="${berry.sprite}" alt="2-dimensional sprite of ${berry.name} fruit" class="berry-image">
         <h3 class="header">
           ${berry.name}
         </h3>
